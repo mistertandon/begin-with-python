@@ -1,0 +1,2 @@
+Hi,
+content of 17_b_read_file.txt
