@@ -1,3 +1,4 @@
 .git/
 .ipynb_checkpoints/
 neural_networks/lesson_04_deep_learning_with_pyTorch/FashionMNIST_data/
+neural_networks/lesson_04_deep_learning_with_pyTorch/Cat_Dog_data/
