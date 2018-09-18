@@ -2,4 +2,5 @@
 .ipynb_checkpoints/
 neural_networks/lesson_04_deep_learning_with_pyTorch/FashionMNIST_data/
 neural_networks/lesson_04_deep_learning_with_pyTorch/Cat_Dog_data/
+python_scripting/project-01-intropylab-classifying-images/__pycache__/
 .vscode/
