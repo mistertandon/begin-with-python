@@ -98,7 +98,20 @@ def get_input_args():
     Returns:
      parse_args() -data structure that stores the command line arguments object  
     """
-    pass
+
+	"""
+	1: How to execute this script
+	$python check_images.py -dir -arch -dogfile
+	"""
+	parser = argparse.ArgumentParser(description = 'How to get user inputs to run application.')
+
+	parser.add_argument('-dir', '--dir', metavar='', required=True, type=str, help='Path to the pet image files(default- \'pet_images/\')')
+	parser.add_argument('-arch', '--arch', metavar='', required=True, type=str, help='CNN model architecture to use for image classification(default-pick any of the following vgg, alexnet, resnet)')
+	parser.add_argument('-dogfile', '--dogfile', metavar='', required=True, type=str, help='Text file that contains all labels associated to dogs(default-\'dognames.txt\'')
+
+	args = parser.parse_args()
+
+	return args
 
 
 def get_pet_labels():
