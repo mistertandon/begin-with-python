@@ -374,7 +374,7 @@ def calculates_results_stats(results_dic):
     results_stats['n_match'] = 0
     results_stats['n_correct_dogs'] = 0
     results_stats['n_correct_notdogs'] = 0
-    results_stats['n_correct_breed'] = 0       
+    results_stats['n_correct_breed'] = 0
     
     # process through the results dictionary
     for key in results_dic:
@@ -465,7 +465,7 @@ def print_results(results_dic, results_stats, model,
                               False doesn't print anything(default) (bool) 
     Returns:
            None - simply printing results.
-    """    
+    """
     # Prints summary statistics over the run
     print("\n\n*** Results Summary for CNN Model Architecture",model.upper(), 
           "***")

@@ -62,7 +62,7 @@ def main():
 	# TODO: 6. Define calculates_results_stats() function to calculate
 	# results of run and puts statistics in a results statistics
 	# dictionary (results_stats_dic)
-	results_stats_dic = calculates_results_stats()
+	results_stats_dic = calculates_results_stats(result_dic)
 
 	# TODO: 7. Define print_results() function to print summary results,
 	# incorrect classifications of dogs and breeds if requested.
@@ -243,7 +243,7 @@ def adjust_results4_isadog(results_dic, dogfile):
 		results_dic[file_name].extend((is_dog, is_dog_predicted))
 		
 
-def calculates_results_stats():
+def calculates_results_stats(results_dic):
     """
     Calculates statistics of the results of the run using classifier's model 
     architecture on classifying images. Then puts the results statistics in a 
@@ -267,38 +267,85 @@ def calculates_results_stats():
                      name (starting with 'pct' for percentage or 'n' for count)
                      and the value is the statistic's value 
     """
-	pass
+    # Sets all counters to initial values of zero so that they can 
+    # be incremented while processing through the images in results_dic 
+    results_stats = dict()
+    results_stats['n_dogs_img'] = 0
+    results_stats['n_match'] = 0
+    results_stats['n_correct_dogs'] = 0
+    results_stats['n_correct_notdogs'] = 0
+    results_stats['n_correct_breed'] = 0
+
+	for file_name, classifier_result in results_dic.items():
+
+		if sum(classifier_result[2:]) == 3:
+			results_stats['n_correct_breed'] += 1
+
+		if classifier_result[2] == 1:
+			results_stats['n_match'] += 1
+
+		if classifier_result[3] == 1:
+			results_stats['n_dogs_img'] += 1
+
+			if classifier_result[4] == 1:
+				results_stats['n_correct_dogs'] += 1
+		else:
+
+			if classifier_result[4] == 0:
+				results_stats['n_correct_notdogs'] += 1
+
+	results_stats['n_images'] = len(results_dic)
+
+	results_stats['n_notdogs_img'] = len(
+		results_dic) - results_stats['n_dogs_img']
+
+	results_stats['pct_match'] = (
+		results_stats['n_match']/results_stats['n_images'])*100.0
+
+	results_stats['pct_correct_dogs'] = (
+		results_stats['n_correct_dogs']/results_stats['n_dogs_img'])*100.0
+
+	results_stats['pct_correct_breed'] = (
+		results_stats['n_correct_breed']/results_stats['n_dogs_img'])*100.0
+
+	if results_stats['n_correct_notdogs'] > 0:
+		results_stats['pct_correct_notdogs'] = (
+			results_stats['n_correct_notdogs']/results_stats['n_notdogs_img'])*100.0
+	else:	
+		results_stats['pct_correct_notdogs'] = 0.0
+
+	return results_stats
 
 
 def print_results():
-	"""
-	Prints summary results on the classification and then prints incorrectly 
-	classified dogs and incorrectly classified dog breeds if user indicates 
-	they want those printouts (use non-default values)
-	Parameters:
-	  results_dic - Dictionary with key as image filename and value as a List 
-									 (index)idx 0 = pet image label (string)
-																	idx 1 = classifier label (string)
-																	idx 2 = 1/0 (int)  where 1 = match between pet image and 
-																									classifer labels and 0 = no match between labels
-																	idx 3 = 1/0 (int)  where 1 = pet image 'is-a' dog and 
-																									0 = pet Image 'is-NOT-a' dog. 
-																	idx 4 = 1/0 (int)  where 1 = Classifier classifies image 
-																									'as-a' dog and 0 = Classifier classifies image  
-																									'as-NOT-a' dog.
-	  results_stats - Dictionary that contains the results statistics (either a
-																	 percentage or a count) where the key is the statistic's 
-																	 name (starting with 'pct' for percentage or 'n' for count)
-																	 and the value is the statistic's value 
-	  model - pretrained CNN whose architecture is indicated by this parameter,
-									  values must be: resnet alexnet vgg (string)
-	  print_incorrect_dogs - True prints incorrectly classified dog images and 
-																									 False doesn't print anything(default) (bool)  
-	  print_incorrect_breed - True prints incorrectly classified dog breeds and 
-																									  False doesn't print anything(default) (bool) 
-	Returns:
-					   None - simply printing results.
-	"""
+    """
+    Prints summary results on the classification and then prints incorrectly 
+    classified dogs and incorrectly classified dog breeds if user indicates 
+    they want those printouts (use non-default values)
+    Parameters:
+      results_dic - Dictionary with key as image filename and value as a List 
+             (index)idx 0 = pet image label (string)
+                    idx 1 = classifier label (string)
+                    idx 2 = 1/0 (int)  where 1 = match between pet image and 
+                            classifer labels and 0 = no match between labels
+                    idx 3 = 1/0 (int)  where 1 = pet image 'is-a' dog and 
+                            0 = pet Image 'is-NOT-a' dog. 
+                    idx 4 = 1/0 (int)  where 1 = Classifier classifies image 
+                            'as-a' dog and 0 = Classifier classifies image  
+                            'as-NOT-a' dog.
+      results_stats - Dictionary that contains the results statistics (either a
+                     percentage or a count) where the key is the statistic's 
+                     name (starting with 'pct' for percentage or 'n' for count)
+                     and the value is the statistic's value 
+      model - pretrained CNN whose architecture is indicated by this parameter,
+              values must be: resnet alexnet vgg (string)
+      print_incorrect_dogs - True prints incorrectly classified dog images and 
+                             False doesn't print anything(default) (bool)  
+      print_incorrect_breed - True prints incorrectly classified dog breeds and 
+                              False doesn't print anything(default) (bool) 
+    Returns:
+           None - simply printing results.
+    """
 	pass
 
 
