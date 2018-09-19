@@ -58,6 +58,7 @@ def main():
 	# images as 'a dog' or 'not a dog'. This demonstrates if the model can
 	# correctly classify dog images as dogs (regardless of breed)
 	adjust_results4_isadog(result_dic, in_arg.dogfile)
+	print(result_dic)
 
 	# TODO: 6. Define calculates_results_stats() function to calculate
 	# results of run and puts statistics in a results statistics
@@ -140,7 +141,7 @@ def get_pet_labels(image_dir):
 			if word.isalpha():
 				pet_label += word + " "
 
-		pet_label.strip().lower()
+		pet_label = pet_label.strip().lower()
 
 		if pet_label not in petlabels_dic:
 			petlabels_dic[in_files[idx]] = pet_label
@@ -179,10 +180,11 @@ def classify_images(images_dir, petlabel_dic, model):
 	results_dic = dict()
 
 	for image_name, label_name in petlabel_dic.items():
+
 		classifier_label = classifier(images_dir+image_name, model)
 		classifier_label = classifier_label.strip().lower()
 
-		is_prediction_match = 1 if classifier_label == label_name else 0
+		is_prediction_match = 0 if classifier_label.find(label_name) == -1 else 1
 
 		results_dic[image_name] = [label_name,
 								   classifier_label, is_prediction_match]
@@ -198,25 +200,25 @@ def adjust_results4_isadog(results_dic, dogfile):
 	it gets dog breed wrong (not a match).
 	Parameters:
 	  results_dic - Dictionary with key as image filename and value as a List 
-									 (index)idx 0 = pet image label (string)
-																	idx 1 = classifier label (string)
-																	idx 2 = 1/0 (int)  where 1 = match between pet image and 
-																									classifer labels and 0 = no match between labels
-																	--- where idx 3 & idx 4 are added by this function ---
-																	idx 3 = 1/0 (int)  where 1 = pet image 'is-a' dog and 
-																									0 = pet Image 'is-NOT-a' dog. 
-																	idx 4 = 1/0 (int)  where 1 = Classifier classifies image 
-																									'as-a' dog and 0 = Classifier classifies image  
-																									'as-NOT-a' dog.
+					(index)idx 0 = pet image label (string)
+												idx 1 = classifier label (string)
+												idx 2 = 1/0 (int)  where 1 = match between pet image and 
+																				classifer labels and 0 = no match between labels
+												--- where idx 3 & idx 4 are added by this function ---
+												idx 3 = 1/0 (int)  where 1 = pet image 'is-a' dog and 
+																				0 = pet Image 'is-NOT-a' dog. 
+												idx 4 = 1/0 (int)  where 1 = Classifier classifies image 
+																				'as-a' dog and 0 = Classifier classifies image  
+																				'as-NOT-a' dog.
 	 dogsfile - A text file that contains names of all dogs from ImageNet 
-													1000 labels (used by classifier model) and dog names from
-													the pet image files. This file has one dog name per line
-													dog names are all in lowercase with spaces separating the 
-													distinct words of the dogname. This file should have been
-													passed in as a command line argument. (string - indicates 
-													text file's name)
+				1000 labels (used by classifier model) and dog names from
+				the pet image files. This file has one dog name per line
+				dog names are all in lowercase with spaces separating the 
+				distinct words of the dogname. This file should have been
+				passed in as a command line argument. (string - indicates 
+				text file's name)
 	Returns:
-					   None - results_dic is mutable data type so no return needed.
+				None - results_dic is mutable data type so no return needed.
 	"""
 	line = ''
 	dogs_dict = dict()
@@ -230,7 +232,25 @@ def adjust_results4_isadog(results_dic, dogfile):
 				dogs_dict[line] = 1
 
 			line = file_read.readline()
-	print(dogs_dict)
+
+	for file_name, classifier_result in results_dic.items():
+
+		is_dog, is_dog_predicted = 0, 0
+		if classifier_result[0] in dogs_dict:
+			is_dog = 1
+			if classifier_result[1] in dogs_dict:
+				is_dog_predicted = 1
+			else:
+				is_dog_predicted = 0
+		else:
+			is_dog = 0
+			if classifier_result[1] in dogs_dict:
+				is_dog_predicted = 1
+			else:
+				is_dog_predicted = 0
+				
+		results_dic[file_name].extend((is_dog, is_dog_predicted))
+
 
 def calculates_results_stats():
 	"""
